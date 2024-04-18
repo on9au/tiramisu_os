@@ -4,9 +4,9 @@ SECTIONS {
     . = 1M;                         /* Start at 1MB */
 
     /* Multiboot Header */
-    .multiboot :
+    .boot :
     {
-        /* Link the Multiboot header */
+        /* Link the Multiboot header. Multiboot header must always be on top. */
         *(.multiboot)
     }
 
@@ -16,14 +16,4 @@ SECTIONS {
         /* Link the kernel code */
         *(.text)
     }
-
-    /* BSS Section */
-    .bss :
-    {
-        /* Link the BSS section */
-        *(.bss)
-    }
-
-    /* End of kernel */
-    _end = .;                       /* Define _end symbol */
 }

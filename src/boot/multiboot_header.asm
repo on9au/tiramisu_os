@@ -8,4 +8,10 @@ multiboot_header_start:
     dd multiboot_header_end - multiboot_header_start                                    ; Header length
     dd 0x100000000 - (0xe85250d6 + 0 + (multiboot_header_end - multiboot_header_start)) ; Checksum
 
+    ; insert optional multiboot tags here
+
+    ; required end tag
+    dw 0    ; type
+    dw 0    ; flags
+    dd 8    ; size
 multiboot_header_end:
