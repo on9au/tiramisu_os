@@ -1,16 +1,3 @@
-section .bss
-align 4096
-p4_table:
-    resb 4096
-p3_table:
-    resb 4096
-p2_table:
-    resb 4096
-align 4096
-stack_bottom:
-    resb 16384
-stack_top:
-
 section .text
 bits 32
 global _start
@@ -29,12 +16,19 @@ _start:
     ; Checks
     call check_multiboot2   ; Check multiboot2
     call check_cpuid        ; Check CPUID
+    call check_long_mode    ; Check long mode
 
     ; Call your initialization code
-    call bootloader_init
+    call set_up_page_tables     ; Sets up paging.
+    call enable_paging          ; Enables paging.
 
-    ; Jump to the Rust kernel entry point
-    ; jmp higher_half_kernel_entry
+    ; load the 64-bit GDT
+    lgdt [gdt64.pointer]
+    jmp gdt64.code:long_mode_start
+    
+    ; print `OK` to screen
+    mov dword [0xb8000], 0x2f4b2f4f
+    hlt
 
 check_multiboot2:
 	cmp eax, 0x36d76289 ; Check eax if magic exists. GRUB will put magic on eax.
@@ -105,22 +99,6 @@ _error_occurred:
 	mov byte  [0xb800a], al ; Display error code (at 'al') as ASCII character
 	hlt
 
-;
-; --- Bootloader initialization and Kernel preparations ---
-;
-bootloader_init:
-    ; Your initialization code here
-    ; This may involve setting up the environment,
-    ; configuring hardware, etc.
-    ; Please add code for higher half kernel.
-    call set_up_page_tables     ; Sets up paging.
-    call enable_paging          ; Enables paging.
-
-    ; load the 64-bit GDT
-    lgdt [gdt64.pointer]
-    jmp gdt64.code:long_mode_start
-    hlt
-
 set_up_page_tables:
     ; map first P4 entry to P3 table
     mov eax, p3_table
@@ -183,6 +161,7 @@ gdt64:
 ;
 
 global long_mode_start
+extern rust_entry
 section .text
 bits 64
 long_mode_start:
@@ -194,9 +173,23 @@ long_mode_start:
     mov fs, ax
     mov gs, ax
 
+    ; call the rust entry
+    extern rust_entry
+    call rust_entry
+
     ; print `OKAY` to screen
     mov rax, 0x2f592f412f4b2f4f
     mov qword [0xb8000], rax
     hlt
 
-_end:
+section .bss
+align 4096
+p4_table:
+    resb 4096
+p3_table:
+    resb 4096
+p2_table:
+    resb 4096
+stack_bottom:
+    resb 64
+stack_top:

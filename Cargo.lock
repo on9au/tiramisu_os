@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "next_os"
+name = "tiramisu_os"
 version = "0.1.0"

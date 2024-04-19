@@ -7,7 +7,7 @@ SECTIONS {
     .boot :
     {
         /* Link the Multiboot header. Multiboot header must always be on top. */
-        *(.multiboot)
+        KEEP(*(.multiboot))
     }
 
     /* Text Section */
