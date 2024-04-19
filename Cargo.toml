@@ -1,13 +1,29 @@
-[package]
-name = "tiramisu_os"
-version = "0.1.0"
-edition = "2021"
-authors = ["cA0"]
+# [package]
+# name = "tiramisu_os"
+# version = "0.1.0"
+# edition = "2021"
+# authors = ["cA0"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-crate-type = ["staticlib"]
+[workspace]
+resolver = "2"
+members = [
+    "kernel/[!.]*/"
+]
 
-[dependencies]
+default-members = [
+    "kernel/tiramisu_bootloader"
+]
 
+# [dependencies]
+
+# workaround rust-lang/rust#47074
+[profile.dev]
+codegen-units = 1
+incremental = false
+
+# workaround rust-lang/rust#47074
+[profile.release]
+codegen-units = 1
+incremental = false

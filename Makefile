@@ -6,10 +6,10 @@ BOOT_METHOD ?= bios
 
 # Directories
 BUILD_DIR := build
-SRC_DIR := src
-BOOT_DIR := $(SRC_DIR)/boot/$(BOOT_METHOD)
-KERNEL_DIR := $(SRC_DIR)/kernel
-ARCH_DIR := $(SRC_DIR)/arch/$(ARCH)
+KERNEL_DIR := kernel
+BOOT_MODULE:= tiramisu_bootloader
+BOOT_DIR := $(KERNEL_DIR)/$(BOOT_MODULE)/src/$(BOOT_METHOD)
+ARCH_DIR := arch/$(ARCH)
 
 # Filenames
 KERNEL_BIN := $(BUILD_DIR)/kernel-$(ARCH).bin

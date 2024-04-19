@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "tiramisu_os"
+name = "tiramisu_bootloader"
 version = "0.1.0"
