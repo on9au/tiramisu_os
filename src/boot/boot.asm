@@ -113,47 +113,13 @@ bootloader_init:
     ; This may involve setting up the environment,
     ; configuring hardware, etc.
     ; Please add code for higher half kernel.
-    call enable_pae ; Tries to enable PAE if available.
     call set_up_page_tables     ; Sets up paging.
     call enable_paging          ; Enables paging.
 
     ; load the 64-bit GDT
     lgdt [gdt64.pointer]
-
-    mov dword [0xb8000], 0x2f4b2f4f
+    jmp gdt64.code:long_mode_start
     hlt
-
-enable_pae:
-    ; Set the CPUID function to query the feature flags
-    mov eax, 0x01   ; Function 0x01: Processor Info and Feature Bits
-
-    ; Call CPUID instruction
-    cpuid
-
-    ; Check the PAE bit (bit 6) in the EDX register (bit index 5)
-    test edx, 1 << 6   ; Test bit 6 (PAE bit) in EDX
-
-    ; Pae is supported. Jnz to .has_pae_support
-    jnz .has_pae_support
-
-    ; PAE is NOT supported. Jmp to .no_pae_support
-    jmp .no_pae_support
-.has_pae_support:
-    ; PAE is supported. Enable PAE.
-    ; Load the current value of CR4 into eax
-    mov eax, cr4
-
-    ; Set the PAE bit (bit 5) in CR4
-    or eax, 0x20   ; Set bit 5 (PAE bit)
-
-    ; Write the modified value back to CR4
-    mov cr4, eax
-
-    ret
-.no_pae_support:
-    ; PAE is not supported, handle the case accordingly
-    ; You may print an error message, halt the system, or take other actions
-    ret
 
 set_up_page_tables:
     ; map first P4 entry to P3 table
@@ -203,11 +169,34 @@ enable_paging:
 
     ret
 
+section .rodata
 gdt64:
     dq 0 ; zero entry
+.code: equ $ - gdt64 ; new
     dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; code segment
 .pointer:
     dw $ - gdt64 - 1
     dq gdt64
+
+;
+; --- LONG MODE ---
+;
+
+global long_mode_start
+section .text
+bits 64
+long_mode_start:
+    ; load 0 into all data segment registers
+    mov ax, 0
+    mov ss, ax
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
+    ; print `OKAY` to screen
+    mov rax, 0x2f592f412f4b2f4f
+    mov qword [0xb8000], rax
+    hlt
 
 _end:
