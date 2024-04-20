@@ -26,9 +26,9 @@ _start:
     lgdt [gdt64.pointer]
     jmp gdt64.code:long_mode_start
     
-    ; print `OK` to screen
-    mov dword [0xb8000], 0x2f4b2f4f
-    hlt
+    ; Inaccessible
+    mov al, 'F'
+	jmp _error_occurred
 
 check_multiboot2:
 	cmp eax, 0x36d76289 ; Check eax if magic exists. GRUB will put magic on eax.
@@ -176,10 +176,6 @@ long_mode_start:
     ; call the rust entry
     extern rust_entry
     call rust_entry
-
-    ; print `OKAY` to screen
-    mov rax, 0x2f592f412f4b2f4f
-    mov qword [0xb8000], rax
     hlt
 
 section .bss
