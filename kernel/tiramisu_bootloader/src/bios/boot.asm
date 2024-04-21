@@ -117,7 +117,7 @@ set_up_page_tables:
 	mov [p4_table - KERNEL_OFFSET + (511 * 8)], eax
 
 	; map first entry of the low P3 table to the kernel table
-	mov eax, kernel_table - KERNEL_OFFSET
+	mov eax, kernel_data_table - KERNEL_OFFSET
 	or eax, 11b ; present + writable
 	mov [low_p3_table - KERNEL_OFFSET], eax
 	; now to the second to highest entry of the high P3 table
@@ -126,33 +126,33 @@ set_up_page_tables:
 	; map each P2 entry to a huge 2MiB page
 	mov ecx, 0x0       ; counter variable
 
-.map_kernel_table:
+.map_kernel_data_table:
 	mov eax, 0x200000  ; 2MiB
 	mul ecx            ; eax now holds the start address of the ecx-th page
 	or eax, 10000011b  ; present + writable + huge
-	mov [(kernel_table - KERNEL_OFFSET) + (ecx * 8)], eax ; map ecx-th entry
+	mov [(kernel_data_table - KERNEL_OFFSET) + (ecx * 8)], eax ; map ecx-th entry
 
 	inc ecx            ; increase counter
 	cmp ecx, 512       ; if counter == 512, the whole P2 table is mapped
-	jne .map_kernel_table  ; else map the next entry
+	jne .map_kernel_data_table  ; else map the next entry
 
 	; map the first P2 entry to the megabyte table
-	mov eax, megabyte_table - KERNEL_OFFSET
+	mov eax, memory_chunk_table - KERNEL_OFFSET
 	or eax, 11b
 	mov [low_p2_table - KERNEL_OFFSET], eax
 
 	; identity map the first megabyte
 	mov ecx, 0x0
 
-.map_megabyte_table:
+.map_memory_chunk_table:
 	mov eax, 4096      ; 4Kb
 	mul ecx            ; start address of ecx-th page
 	or eax, 11b        ; present + writable
-	mov [(megabyte_table - KERNEL_OFFSET) + (ecx * 8)], eax ; map ecx-th entry
+	mov [(memory_chunk_table - KERNEL_OFFSET) + (ecx * 8)], eax ; map ecx-th entry
 
 	inc ecx            ; increase counter
 	cmp ecx, 256       ; if counter = 256, the whole megabyte is mapped
-	jne .map_megabyte_table ; else map the next entry
+	jne .map_memory_chunk_table ; else map the next entry
 
 	ret
 
@@ -164,15 +164,11 @@ unmap_guard_page:
 	and ecx, 0x1FF  ; get P2 index by itself
 	; ecx now holds the index into the P2 page table of the entry we want to unmap
 	mov eax, 0x0  ; set huge page flag, clear all others
-	mov [(kernel_table - KERNEL_OFFSET) + ecx], eax ; unmap (clear) ecx-th entry
+	mov [(kernel_data_table - KERNEL_OFFSET) + ecx], eax ; unmap (clear) ecx-th entry
 	ret
 
 
 enable_paging:
-	; Enable:
-	;     PGE: (Page Global Extentions)
-	;     PAE: (Physical Address Extension)
-	;     PSE: (Physical Size Extentions)
 	mov eax, cr4
 	or eax, (1 << 7) | (1 << 5) | (1 << 1)
 	mov cr4, eax
@@ -181,8 +177,8 @@ enable_paging:
 	mov eax, p4_table - KERNEL_OFFSET
 	mov cr3, eax
 
-	; set the no execute (bit 11), long mode (bit 8), and SYSCALL Enable (bit 0)
-	; bits in the EFER MSR (model specific register)
+	; set the no execute (11), long mode (8), and SYSCALL Enable (0)
+	; bits in the EFER
 	mov ecx, 0xC0000080
 	rdmsr
 	or eax, (1 <<11) | (1 << 8) | (1 << 0) ; NXE, LME, SCE
@@ -240,19 +236,14 @@ high_p3_table:
 	resb 4096
 low_p2_table:
 	resb 4096
-megabyte_table:
+memory_chunk_table:
 	resb 4096
-kernel_table:
+kernel_data_table:
 	resb 4096
 
 ; 2MB space here
 section .guard_huge_page nobits noalloc noexec nowrite
 
-
-; We use page alignment (4096B) for convenience and compatibility 
-; with the stack abstractions in Rust. 
-; We place the stack in its own sections for loading/parsing convenience.
-; Note: The `bsp_stack_guard_page` is mapped by the boot-time page tables. 
 section .stack nobits alloc noexec write
 align 4096 
 global bsp_stack_guard_page
@@ -260,7 +251,7 @@ bsp_stack_guard_page:
 	resb 4096
 global bsp_stack_bottom
 stack_bottom:
-	resb 4096 * 32
+	resb 16384
 global bsp_stack_top
 stack_top:
 	resb 4096
@@ -275,10 +266,9 @@ gdt64:
     dq (1<<44) | (1<<47) | (1<<41) | (1<<43) | (1<<53) ; code segment
 .data: equ $ - gdt64
     dq (1<<44) | (1<<47) | (1<<41) ; data segment
-.end equ $
 .pointer_low:
-    dw .end - gdt64 - 1
+    dw $ - gdt64 - 1
     dd gdt64 - KERNEL_OFFSET
 .pointer:
-    dw .end - gdt64 - 1
+    dw $ - gdt64 - 1
     dq gdt64
