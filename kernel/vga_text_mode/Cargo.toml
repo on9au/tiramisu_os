@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 authors = ["cA0"]
 description = "VGA text mode buffer."
+
+[dependencies]
