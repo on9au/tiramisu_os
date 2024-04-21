@@ -1,5 +1,3 @@
 {
-    "rust-analyzer.cargo.target": "x86_64-tiramisu_os.json",
-    "rust-analyzer.check.allTargets": false,
-  }
-  
+    "rust-analyzer.check.overrideCommand": ["xargo", "check", "--target", "x86_64-tiramisu_os"]
+}

@@ -15,7 +15,7 @@ ARCH_DIR := arch/$(ARCH)
 KERNEL_BIN := $(BUILD_DIR)/kernel-$(ARCH).bin
 ISO := $(BUILD_DIR)/os-$(ARCH).iso
 TARGET := $(ARCH)-tiramisu_os
-RUST_OS := target/$(TARGET)/debug/libtiramisu_os.a
+BOOT_RUST_ENTRY_POINT := target/$(TARGET)/debug/libtiramisu_bootloader.a
 
 # Tools
 LD := ld
@@ -51,9 +51,9 @@ $(ISO): $(KERNEL_BIN) $(GRUB_CFG)
 	@grub-mkrescue -o $(ISO) -d /usr/lib/grub/i386-pc $(BUILD_DIR)/isofiles
 	@rm -r $(BUILD_DIR)/isofiles
 
-$(KERNEL_BIN): kernel $(RUST_OS) $(ASSEMBLY_OBJECT_FILES) $(LINKER_SCRIPT)
+$(KERNEL_BIN): kernel $(BOOT_RUST_ENTRY_POINT) $(ASSEMBLY_OBJECT_FILES) $(LINKER_SCRIPT)
 	@$(LD) -n --gc-sections -T $(LINKER_SCRIPT) -o $(KERNEL_BIN) \
-		$(ASSEMBLY_OBJECT_FILES) $(RUST_OS)
+		$(ASSEMBLY_OBJECT_FILES) $(BOOT_RUST_ENTRY_POINT)
 
 # compile assembly files
 $(BUILD_DIR)/arch/$(ARCH)/%.o: $(BOOT_DIR)/%.asm
