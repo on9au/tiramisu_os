@@ -3,7 +3,9 @@ name = "tiramisu_bootloader"
 version = "0.1.0"
 edition = "2021"
 authors = ["cA0"]
-description = "Minimalist crate for booting up Tiramisu OS. ASM segment, passed to ignition.rs, then passed on to ___"
+description = """Minimalist crate for booting up Tiramisu OS. ASM segment, passed to bios.rs,
+then passed on to ___. Based on phil-opp's first edition OS tutorial (starting), and Theseus OS
+(for higher half implementation and paging)"""
 
 [lib]
 crate-type = ["staticlib"]
