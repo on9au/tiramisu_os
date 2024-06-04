@@ -20,3 +20,11 @@ pub enum Color {
     Yellow     = 14,
     White      = 15,
 }
+
+struct ColorCode(u8);
+
+impl ColorCode {
+    const fn new(foreground: Color, background: Color) -> ColorCode {
+        ColorCode((background as u8) << 4 | (foreground as u8))
+    }
+}
