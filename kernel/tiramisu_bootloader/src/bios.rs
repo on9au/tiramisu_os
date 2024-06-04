@@ -6,7 +6,7 @@ pub extern "C" fn rust_entry() -> ! {
     let color_byte = 0x1f; // white foreground, blue background
 
     let mut hello_colored = [color_byte; 24];
-    for (i, char_byte) in hello.into_iter().enumerate() {
+    for (i, char_byte) in hello.iter().enumerate() {
         hello_colored[i * 2] = *char_byte;
     }
 

@@ -257,7 +257,7 @@ stack_top:
 	resb 4096
 double_fault_stack_top:
 
-KERNEL_OFFSET equ 0xFFFFFFFF80000000
+KERNEL_OFFSET equ 0xFFFFFFFF80000000 ; This is the kernel offset.
 
 section .rodata
 gdt64:
