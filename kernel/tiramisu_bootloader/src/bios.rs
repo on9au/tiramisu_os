@@ -1,34 +1,41 @@
-use vga_text_mode::print_something;
+use vga_text_mode::{print, println};
+
+use crate::boot_main;
 
 #[no_mangle]
 pub extern "C" fn rust_entry() -> ! {
     // ATTENTION: we have a very small stack and no guard page
 
-    let hello = b"Hello World!";
-    let color_byte = 0x1f; // white foreground, blue background
+    // Do BIOS specific initialization here
 
-    let mut hello_colored = [color_byte; 24];
-    for (i, char_byte) in hello.iter().enumerate() {
-        hello_colored[i * 2] = *char_byte;
-    }
-
-    // write `Hello World!` to the center of the VGA text buffer
-    let buffer_ptr = (0xb8000 + 1988) as *mut _;
-    unsafe { *buffer_ptr = hello_colored };
-
-    print_something();
-
-    loop {
-        unsafe { core::arch::asm!("hlt") }
-    }
+    boot_main()
 }
 
 #[no_mangle]
 pub extern "C" fn eh_personality() {}
 
 #[panic_handler]
-fn panic_fmt(_info: &core::panic::PanicInfo) -> ! {
-    // Implement your custom panic_fmt function here
-    // Print panic information or take any other desired action
-    loop {}
+fn panic_fmt(info: &core::panic::PanicInfo) -> ! {
+    println!("Panic!");
+    if let Some(location) = info.location() {
+        println!("File: '{}:{}'", location.file(), location.line());
+    } else {
+        println!("File: Unavailable");
+    }
+
+    println!("{}", info.message());
+
+    println!("Kernel Panic! We are hanging here...");
+
+    loop {
+        // CPU power is precious, let's save some by halting the CPU
+        unsafe { core::arch::asm!("hlt") }
+    }
+}
+
+#[test_case]
+fn trivial_assertion() {
+    print!("trivial assertion... ");
+    assert_eq!(1, 1);
+    println!("[ok]");
 }
