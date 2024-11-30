@@ -47,12 +47,7 @@ clean:
 run: $(ISO)
 	@qemu-system-x86_64 -cdrom $(ISO)
 
-test: $(TEST_ISO)
-	@qemu-system-x86_64 -cdrom $(TEST_ISO)
-
 iso: $(ISO)
-
-test_iso: $(TEST_ISO)
 
 $(ISO): $(KERNEL_BIN) $(GRUB_CFG)
 	@$(MKDIR_P) $(BUILD_DIR)/isofiles/boot/grub
@@ -61,20 +56,9 @@ $(ISO): $(KERNEL_BIN) $(GRUB_CFG)
 	@grub-mkrescue -o $(ISO) -d /usr/lib/grub/i386-pc $(BUILD_DIR)/isofiles
 	@rm -r $(BUILD_DIR)/isofiles
 
-$(TEST_ISO): $(TEST_KERNEL_BIN) $(GRUB_CFG)
-	@$(MKDIR_P) $(BUILD_DIR)/isofiles/boot/grub
-	@cp $(TEST_KERNEL_BIN) $(BUILD_DIR)/isofiles/boot/kernel.bin
-	@cp $(GRUB_CFG) $(BUILD_DIR)/isofiles/boot/grub
-	@grub-mkrescue -o $(TEST_ISO) -d /usr/lib/grub/i386-pc $(BUILD_DIR)/isofiles
-	@rm -r $(BUILD_DIR)/isofiles
-
 $(KERNEL_BIN): kernel $(BOOT_RUST_ENTRY_POINT) $(ASSEMBLY_OBJECT_FILES) $(LINKER_SCRIPT)
 	@$(LD) -n --gc-sections -T $(LINKER_SCRIPT) -o $(KERNEL_BIN) \
 		$(ASSEMBLY_OBJECT_FILES) $(BOOT_RUST_ENTRY_POINT)
-
-$(TEST_KERNEL_BIN): test_kernel $(BOOT_Rust_entry_point) $(ASSEMBLY_OBJECT_FILES) $(LINKER_SCRIPT)
-	@ld -n --gc-sections -T $(LINKER_SCRIPT) -o $(TEST_KERNEL_BIN) \
-		$(ASSEMBLY_OBJECT_FILES) target/$(TARGET)/debug/deps/libtiramisu_bootloader-*.rlib
 
 # compile assembly files
 $(BUILD_DIR)/arch/$(ARCH)/%.o: $(BOOT_DIR)/%.asm
