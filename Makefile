@@ -34,7 +34,7 @@ ASSEMBLY_OBJECT_FILES := $(patsubst $(BOOT_DIR)/%.asm, \
 all: $(KERNEL_BIN)
 
 kernel:
-	@RUST_TARGET_PATH=$(shell pwd) xargo build --target $(TARGET)
+	@RUST_TARGET_PATH=$(shell pwd) cargo build --target $(TARGET).json
 
 clean:
 	@rm -r $(BUILD_DIR)

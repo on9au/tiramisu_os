@@ -1,3 +1,5 @@
+use vga_text_mode::print_something;
+
 #[no_mangle]
 pub extern "C" fn rust_entry() -> ! {
     // ATTENTION: we have a very small stack and no guard page
@@ -14,7 +16,11 @@ pub extern "C" fn rust_entry() -> ! {
     let buffer_ptr = (0xb8000 + 1988) as *mut _;
     unsafe { *buffer_ptr = hello_colored };
 
-    loop {}
+    print_something();
+
+    loop {
+        unsafe { core::arch::asm!("hlt") }
+    }
 }
 
 #[no_mangle]
