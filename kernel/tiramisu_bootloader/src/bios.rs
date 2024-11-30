@@ -1,4 +1,4 @@
-use vga_text_mode::{print, println};
+use vga_text_mode::println;
 
 use crate::boot_main;
 
@@ -33,9 +33,9 @@ fn panic_fmt(info: &core::panic::PanicInfo) -> ! {
     }
 }
 
-#[test_case]
-fn trivial_assertion() {
-    print!("trivial assertion... ");
-    assert_eq!(1, 1);
-    println!("[ok]");
-}
+// #[test_case]
+// fn trivial_assertion() {
+//     print!("trivial assertion... ");
+//     assert_eq!(1, 1);
+//     println!("[ok]");
+// }
