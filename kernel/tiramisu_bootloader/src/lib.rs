@@ -55,12 +55,9 @@ pub mod tests {
     use uart_16550::serial_println;
     use vga_text_mode::println;
 
-    const ALL_TESTS: &[(&dyn Fn(), &str)] = &([
-        &vga_text_mode::test::TESTS[..],
-        &TESTS[..],
-        &uart_16550::test::TESTS[..],
-    ]
-    .concat());
+    /// Declare tests in a given module.
+    const ALL_TESTS: &[&[(&dyn Fn(), &str)]] =
+        &[TESTS, vga_text_mode::test::TESTS, uart_16550::test::TESTS];
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     #[repr(u32)]
@@ -94,12 +91,15 @@ pub mod tests {
         }
     }
 
-    pub fn test_runner(tests: &[(&dyn Fn(), &str)]) {
+    pub fn test_runner(tests: &[&[(&dyn Fn(), &str)]]) {
         println!("Running in test mode. Please check the serial output for test results.");
         serial_println!("Running {} tests", tests.len());
-        for test in tests {
-            test.0();
-            serial_println!("[  OK  ] {}", test.1);
+        for module in tests {
+            for (test, name) in *module {
+                serial_println!("Running test: {}", name);
+                test();
+                serial_println!("[ok]");
+            }
         }
         println!("All tests passed!");
         serial_println!("All tests passed!");
@@ -107,7 +107,7 @@ pub mod tests {
     }
 
     pub fn test_main() {
-        test_runner(&TESTS);
+        test_runner(ALL_TESTS);
     }
 
     // Define the tests here
