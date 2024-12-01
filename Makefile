@@ -48,7 +48,7 @@ run: $(ISO)
 	@qemu-system-x86_64 -cdrom $(ISO) -serial stdio
 
 test: $(TEST_ISO)
-	@qemu-system-x86_64 -cdrom $(TEST_ISO) -serial stdio -device isa-debug-exit,iobase=0xf4,iosize=0x04 || [ $$? -eq 33 ]
+	@qemu-system-x86_64 -cdrom $(TEST_ISO) -display none -serial stdio -device isa-debug-exit,iobase=0xf4,iosize=0x04 || [ $$? -eq 33 ]
 
 iso: $(ISO)
 
