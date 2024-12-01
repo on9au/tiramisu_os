@@ -51,6 +51,7 @@ struct Buffer {
 }
 
 pub struct Writer {
+    row_position: usize,
     column_position: usize,
     color_code: ColorCode,
     buffer: &'static mut Buffer,
@@ -65,7 +66,7 @@ impl Writer {
                     self.new_line();
                 }
 
-                let row = BUFFER_HEIGHT - 1;
+                let row = self.row_position;
                 let col = self.column_position;
 
                 let color_code = self.color_code;
@@ -79,6 +80,15 @@ impl Writer {
     }
 
     fn new_line(&mut self) {
+        self.row_position += 1;
+        if self.row_position >= BUFFER_HEIGHT {
+            self.scroll();
+            self.row_position = BUFFER_HEIGHT - 1;
+        }
+        self.column_position = 0;
+    }
+
+    fn scroll(&mut self) {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
                 let character = self.buffer.chars[row][col];
@@ -86,7 +96,6 @@ impl Writer {
             }
         }
         self.clear_row(BUFFER_HEIGHT - 1);
-        self.column_position = 0;
     }
 
     fn clear_row(&mut self, row: usize) {
@@ -97,6 +106,14 @@ impl Writer {
         for col in 0..BUFFER_WIDTH {
             self.buffer.chars[row][col] = blank;
         }
+    }
+
+    pub fn clear_screen(&mut self) {
+        for row in 0..BUFFER_HEIGHT {
+            self.clear_row(row);
+        }
+        self.row_position = 0;
+        self.column_position = 0;
     }
 
     pub fn write_string(&mut self, s: &str) {
@@ -122,6 +139,7 @@ impl fmt::Write for Writer {
 
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+        row_position: 0,
         column_position: 0,
         color_code: ColorCode::new(Color::LightGray, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
@@ -137,6 +155,13 @@ macro_rules! print {
 macro_rules! println {
     () => ($crate::print!("\n"));
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! clear_screen {
+    () => {
+        $crate::WRITER.lock().clear_screen()
+    };
 }
 
 #[doc(hidden)]

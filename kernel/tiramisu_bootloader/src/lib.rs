@@ -6,7 +6,7 @@ mod bios;
 #[cfg(feature = "test")]
 mod test;
 
-use vga_text_mode::println;
+use vga_text_mode::{clear_screen, println};
 
 pub fn boot_main() -> ! {
     #[cfg(feature = "test")]
@@ -22,7 +22,9 @@ pub fn boot_main() -> ! {
 }
 
 fn main() -> ! {
+    clear_screen!();
     println!("Hello World from Tiramisu Bootloader!");
+    println!("We are hanging here...");
 
     loop {
         unsafe { core::arch::asm!("hlt") }
