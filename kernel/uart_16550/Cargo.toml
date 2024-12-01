@@ -2,6 +2,13 @@
 name = "uart_16550"
 version = "0.1.0"
 edition = "2021"
+description = "UART 16550 driver and writer."
 
 [lib]
 crate-type = ["rlib"]
+
+[dependencies]
+lazy_static = { workspace = true }
+spin = { workspace = true }
+x86 = { workspace = true }
+bitflags = { workspace = true }

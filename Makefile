@@ -45,7 +45,7 @@ clean:
 	@rm -r $(BUILD_DIR)
 
 run: $(ISO)
-	@qemu-system-x86_64 -cdrom $(ISO)
+	@qemu-system-x86_64 -cdrom $(ISO) -serial stdio
 
 iso: $(ISO)
 

@@ -8,7 +8,7 @@ bootloader error codes:
 
 todo:
 
-- [ ] serial printing with uart_16550 crate
+- [x] serial printing with uart_16550 crate
 - [ ] kernel logging
 - [ ] exception handling
 - [ ] interrupt handling
