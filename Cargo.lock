@@ -70,9 +70,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "test_system"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "spin",
+]
+
+[[package]]
 name = "tiramisu_bootloader"
 version = "0.1.0"
 dependencies = [
+ "test_system",
  "uart_16550",
  "vga_text_mode",
 ]
