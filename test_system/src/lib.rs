@@ -1,5 +1,6 @@
 #![no_std]
 
+/// Declare tests in a given module.
 #[macro_export]
 macro_rules! declare_tests {
     ($($name:ident => $body:block),* $(,)?) => {
@@ -9,9 +10,9 @@ macro_rules! declare_tests {
             }
         )*
 
-        pub const TESTS: &[&dyn Fn()] = &[
+        pub const TESTS: &[(&dyn Fn(), &str)] = &[
             $(
-                &$name,
+                (&$name, stringify!($name)),
             )*
         ];
     };

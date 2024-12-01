@@ -2,6 +2,9 @@
 
 pub mod errors;
 
+#[cfg(feature = "test")]
+pub mod test;
+
 use core::fmt::{self, Write};
 
 use bitflags::bitflags;

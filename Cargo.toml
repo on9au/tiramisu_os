@@ -24,6 +24,7 @@ test_system = { path = "test_system" }
 lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
 spin = "0.9.8"
 x86 = "0.52.0"
+x86_64 = "0.15.2"
 bitflags = "2.6.0"
 
 # workaround rust-lang/rust#47074

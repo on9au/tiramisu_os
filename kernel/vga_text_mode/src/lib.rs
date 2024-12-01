@@ -1,7 +1,7 @@
 #![no_std]
 
-#[cfg(test)]
-mod test;
+#[cfg(feature = "test")]
+pub mod test;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

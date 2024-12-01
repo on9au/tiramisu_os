@@ -14,7 +14,8 @@ crate-type = ["staticlib"]
 vga_text_mode = { workspace = true }
 uart_16550 = { workspace = true }
 test_system = { workspace = true }
+x86_64 = { workspace = true }
 
 [features]
 default = []
-test = []
+test = ["vga_text_mode/test", "uart_16550/test"]
