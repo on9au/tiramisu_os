@@ -172,7 +172,7 @@ lazy_static::lazy_static! {
 
 #[macro_export]
 macro_rules! serial_print {
-    ($($arg:tt)*) => ($crate::_uart_print(format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::_serial_print(format_args!($($arg)*)));
 }
 
 #[macro_export]
