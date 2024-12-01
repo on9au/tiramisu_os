@@ -94,6 +94,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "tiramisu_memory"
+version = "0.1.0"
+
+[[package]]
 name = "uart_16550"
 version = "0.1.0"
 dependencies = [

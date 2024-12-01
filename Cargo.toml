@@ -19,6 +19,7 @@ tiramisu_bootloader = { path = "kernel/tiramisu_bootloader" }
 vga_text_mode = { path = "kernel/vga_text_mode" }
 uart_16550 = { path = "kernel/uart_16550" }
 test_system = { path = "test_system" }
+tiramisu_memory = { path = "kernel/memory" }
 
 # External Crates
 lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
