@@ -204,7 +204,7 @@ long_mode_start:
 	jmp rax
 
 global start_high
-extern rust_entry
+extern rust_bios_entry
 section .text
 bits 64
 start_high:
@@ -220,8 +220,8 @@ start_high:
     mov gs, ax
 
     ; call the rust entry
-    extern rust_entry
-    call rust_entry
+    extern rust_bios_entry
+    call rust_bios_entry
     hlt
 
 section .page_table nobits alloc noexec write
