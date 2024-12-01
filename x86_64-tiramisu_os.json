@@ -9,13 +9,5 @@
   "os": "none",
   "disable-redzone": true,
   "features": "-mmx,-sse,+soft-float",
-  "panic-strategy": "abort",
-  "pre-link-args": {
-    "gcc": [
-      "-nostdlib",
-      "-nostartfiles",
-      "-T",
-      "./kernel/tiramisu_bootloader/src/bios/linker.ld"
-    ]
-  }
+  "panic-strategy": "abort"
 }

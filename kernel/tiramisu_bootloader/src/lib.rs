@@ -1,7 +1,11 @@
 #![no_std]
 #![no_main]
 
+#[cfg(feature = "bios")]
 mod bios;
+
+#[cfg(feature = "uefi")]
+mod uefi;
 
 #[cfg(feature = "test")]
 mod test;

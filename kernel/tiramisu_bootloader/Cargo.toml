@@ -17,5 +17,11 @@ test_system = { workspace = true }
 x86_64 = { workspace = true }
 
 [features]
-default = []
+default = ["bios"]
+## Build the bootloader for BIOS (multiboot2)
+bios = []
+## Build the bootloader for UEFI
+uefi = []
+
+## Test cases
 test = ["vga_text_mode/test", "uart_16550/test"]
