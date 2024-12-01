@@ -6,8 +6,8 @@ authors = ["cA0"]
 description = "VGA text mode buffer."
 
 [dependencies]
-lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
-spin = "0.9.8"
+lazy_static = { workspace = true }
+spin = { workspace = true }
 
 [lib]
 crate-type = ["rlib"]

@@ -16,7 +16,16 @@ default-members = [
     "kernel/tiramisu_bootloader"
 ]
 
-# [dependencies]
+[workspace.dependencies]
+
+# Internal Crates
+tiramisu_bootloader = { path = "kernel/tiramisu_bootloader" }
+vga_text_mode = { path = "kernel/vga_text_mode" }
+uart_16550 = { path = "kernel/uart_16550" }
+
+# External Crates
+lazy_static = { version = "1.5.0", features = ["spin_no_std"] }
+spin = "0.9.8"
 
 # workaround rust-lang/rust#47074
 [profile.dev]

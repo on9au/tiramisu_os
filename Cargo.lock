@@ -50,6 +50,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "uart_16550"
+version = "0.1.0"
+
+[[package]]
 name = "vga_text_mode"
 version = "0.1.0"
 dependencies = [

@@ -11,4 +11,4 @@ then passed on to ___. Based on phil-opp's first edition OS tutorial (starting),
 crate-type = ["staticlib"]
 
 [dependencies]
-vga_text_mode = { path = "../vga_text_mode" }
+vga_text_mode = { workspace = true }
