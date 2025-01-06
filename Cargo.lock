@@ -46,6 +46,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "logging"
+version = "0.1.0"
+dependencies = [
+ "uart_16550",
+ "vga_text_mode",
+]
+
+[[package]]
 name = "raw-cpuid"
 version = "10.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -87,6 +95,7 @@ dependencies = [
 name = "tiramisu_bootloader"
 version = "0.1.0"
 dependencies = [
+ "logging",
  "test_system",
  "uart_16550",
  "vga_text_mode",

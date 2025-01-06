@@ -1,5 +1,5 @@
 [package]
-name = "tiramisu_memory"
+name = "logging"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,3 +7,5 @@ edition = "2024"
 crate-type = ["rlib"]
 
 [dependencies]
+uart_16550 = { workspace = true }
+vga_text_mode = { workspace = true }

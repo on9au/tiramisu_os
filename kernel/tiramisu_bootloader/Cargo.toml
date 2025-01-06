@@ -1,7 +1,7 @@
 [package]
 name = "tiramisu_bootloader"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 authors = ["cA0"]
 description = """Minimalist crate for booting up Tiramisu OS. ASM segment, passed to bios.rs,
 then passed on to ___. Based on phil-opp's first edition OS tutorial (starting), and Theseus OS
@@ -15,6 +15,7 @@ vga_text_mode = { workspace = true }
 uart_16550 = { workspace = true }
 test_system = { workspace = true }
 x86_64 = { workspace = true }
+logging = { workspace = true }
 
 [features]
 default = ["bios"]

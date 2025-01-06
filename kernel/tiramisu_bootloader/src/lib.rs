@@ -35,7 +35,7 @@ fn main() -> ! {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn eh_personality() {}
 
 #[cfg(not(feature = "test"))]
