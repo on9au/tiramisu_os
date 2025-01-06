@@ -8,7 +8,7 @@ pub extern "C" fn rust_bios_entry() -> ! {
     // ATTENTION: we have a very small stack and no guard page
 
     // Do BIOS specific initialization here
-    info!("Rust Entry from x86_64 BIOS");
+    info!("Entry from x86_64 BIOS");
 
     boot_main()
 }

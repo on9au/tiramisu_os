@@ -1,35 +1,49 @@
 #![no_std]
 
-#[macro_export]
-macro_rules! log_with_level {
-    ($lvl:expr, $($arg:tt)*) => {{
-        let msg_str = format_args!($($arg)*);
-        uart_16550::serial_println!("[{:5}] {}", $lvl, msg_str);
-        vga_text_mode::println!("[{:5}] {}", $lvl, msg_str);
-    }};
+use core::fmt;
+
+#[doc(hidden)]
+pub fn _log(args: fmt::Arguments) {
+    use core::fmt::Write;
+    use uart_16550::SERIAL1;
+    use vga_text_mode::WRITER;
+
+    SERIAL1.lock().write_fmt(args).unwrap();
+    WRITER.lock().write_fmt(args).unwrap();
 }
 
 #[macro_export]
 macro_rules! trace {
-    ($($arg:tt)*) => ($crate::log_with_level!("TRACE", $($arg)*));
+    () => ($crate::_log(format_args!("[TRACE] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[TRACE] {}\n", format_args!($($arg)*))));
 }
 
 #[macro_export]
 macro_rules! debug {
-    ($($arg:tt)*) => ($crate::log_with_level!("DEBUG", $($arg)*));
+    () => ($crate::_log(format_args!("[DEBUG] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[DEBUG] {}\n", format_args!($($arg)*))));
 }
 
 #[macro_export]
 macro_rules! info {
-    ($($arg:tt)*) => ($crate::log_with_level!("INFO", $($arg)*));
+    () => ($crate::_log(format_args!("[INFO ] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[INFO ] {}\n", format_args!($($arg)*))));
 }
 
 #[macro_export]
 macro_rules! warn {
-    ($($arg:tt)*) => ($crate::log_with_level!("WARN", $($arg)*));
+    () => ($crate::_log(format_args!("[WARN ] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[WARN ] {}\n", format_args!($($arg)*))));
 }
 
 #[macro_export]
 macro_rules! error {
-    ($($arg:tt)*) => ($crate::log_with_level!("ERROR", $($arg)*));
+    () => ($crate::_log(format_args!("[ERROR] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[ERROR] {}\n", format_args!($($arg)*))));
+}
+
+#[macro_export]
+macro_rules! fatal {
+    () => ($crate::_log(format_args!("[FATAL] \n")));
+    ($($arg:tt)*) => ($crate::_log(format_args!("[FATAL] {}\n", format_args!($($arg)*))));
 }
