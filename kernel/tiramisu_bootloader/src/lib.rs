@@ -32,15 +32,6 @@ fn main() -> ! {
 
     interrupts::init();
 
-    x86_64::instructions::interrupts::int3();
-
-    fn stack_overflow() {
-        stack_overflow(); // for each recursion, the return address is pushed
-    }
-
-    // trigger a stack overflow
-    stack_overflow();
-
     warn!("We are hanging here...");
 
     loop {

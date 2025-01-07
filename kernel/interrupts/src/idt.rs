@@ -1,6 +1,9 @@
+use vga_text_mode::print;
 use x86_64::structures::idt::InterruptDescriptorTable;
 use logging::{info, warn};
 use lazy_static::lazy_static;
+
+use crate::{InterruptIndex, PICS};
 
 lazy_static! {
     pub static ref IDT: InterruptDescriptorTable = {
@@ -11,6 +14,7 @@ lazy_static! {
         idt.general_protection_fault.set_handler_fn(gpf_handler);
         idt.page_fault.set_handler_fn(page_fault_handler);
         idt.double_fault.set_handler_fn(double_fault_handler);
+        idt[InterruptIndex::Timer.as_u8()].set_handler_fn(timer_interrupt_handler);
         // Add more handlers as needed
         idt
     };
@@ -43,4 +47,13 @@ extern "x86-interrupt" fn page_fault_handler(stack_frame: x86_64::structures::id
 
 extern "x86-interrupt" fn double_fault_handler(stack_frame: x86_64::structures::idt::InterruptStackFrame, _error_code: u64) -> ! {
     panic!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
+}
+
+extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: x86_64::structures::idt::InterruptStackFrame) {
+    print!(".");
+
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::Timer.as_u8());
+    }
 }

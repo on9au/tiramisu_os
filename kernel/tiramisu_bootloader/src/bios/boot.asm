@@ -7,6 +7,9 @@ _start:
     ; Paging is disabled.
     ; Kernel has full control over the CPU.
 
+	; Disable interrupts
+	cli
+
     ; Set up the stack
     mov esp, stack_top - KERNEL_OFFSET
 

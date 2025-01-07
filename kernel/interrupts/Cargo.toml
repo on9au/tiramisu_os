@@ -14,6 +14,8 @@ lazy_static = { workspace = true }
 logging = { workspace = true }
 test_system = { workspace = true, optional = true }
 spin = { workspace = true }
+pic8259 = { workspace = true }
+vga_text_mode = { workspace = true }
 
 [features]
 default = []

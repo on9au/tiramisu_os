@@ -32,8 +32,10 @@ version = "0.1.0"
 dependencies = [
  "lazy_static",
  "logging",
+ "pic8259",
  "spin",
  "test_system",
+ "vga_text_mode",
  "x86_64",
 ]
 
@@ -62,6 +64,15 @@ version = "0.1.0"
 dependencies = [
  "uart_16550",
  "vga_text_mode",
+]
+
+[[package]]
+name = "pic8259"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62d9a86c292b165f757e47e7fd66855def189b2564609bc4203727b27c33db22"
+dependencies = [
+ "x86_64",
 ]
 
 [[package]]
