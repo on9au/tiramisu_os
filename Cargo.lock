@@ -127,6 +127,7 @@ dependencies = [
  "spin",
  "test_system",
  "x86",
+ "x86_64",
 ]
 
 [[package]]
@@ -136,6 +137,7 @@ dependencies = [
  "lazy_static",
  "spin",
  "test_system",
+ "x86_64",
 ]
 
 [[package]]

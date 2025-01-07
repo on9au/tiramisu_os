@@ -12,6 +12,7 @@ test = false
 lazy_static = { workspace = true }
 spin = { workspace = true }
 x86 = { workspace = true }
+x86_64 = { workspace = true }
 bitflags = { workspace = true }
 test_system = { workspace = true }
 
