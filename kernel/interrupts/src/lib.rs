@@ -3,3 +3,5 @@
 
 pub mod idt;
 
+#[cfg(feature = "test")]
+mod test;

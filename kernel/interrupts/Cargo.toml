@@ -12,3 +12,8 @@ crate-type = ["rlib"]
 x86_64 = { workspace = true }
 lazy_static = { workspace = true }
 logging = { workspace = true }
+test_system = { workspace = true, optional = true }
+
+[features]
+default = []
+test = ["test_system"]

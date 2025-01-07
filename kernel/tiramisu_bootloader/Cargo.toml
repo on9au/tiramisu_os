@@ -13,7 +13,7 @@ crate-type = ["staticlib"]
 [dependencies]
 vga_text_mode = { workspace = true }
 uart_16550 = { workspace = true }
-test_system = { workspace = true }
+test_system = { workspace = true, optional = true }
 x86_64 = { workspace = true }
 logging = { workspace = true }
 interrupts = { workspace = true }
@@ -26,4 +26,9 @@ bios = []
 uefi = []
 
 ## Test cases
-test = ["vga_text_mode/test", "uart_16550/test"]
+test = [
+    "vga_text_mode/test",
+    "uart_16550/test",
+    "interrupts/test",
+    "test_system",
+]

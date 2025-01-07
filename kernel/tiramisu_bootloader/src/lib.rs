@@ -33,19 +33,13 @@ fn main() -> ! {
 
     init_idt();
 
-    // Intentionally cause an exception to test the IDT
-    bruh();
+    x86_64::instructions::interrupts::int3();
 
     warn!("We are hanging here...");
 
     loop {
         unsafe { core::arch::asm!("hlt") }
     }
-}
-
-#[allow(unconditional_recursion)]
-fn bruh() {
-    bruh();
 }
 
 #[unsafe(no_mangle)]

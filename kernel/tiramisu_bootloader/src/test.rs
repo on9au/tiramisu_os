@@ -1,6 +1,7 @@
 use test_system::declare_tests;
 use uart_16550::{serial_print, serial_println};
 use vga_text_mode::println;
+use logging::warn;
 
 // Define the tests here
 declare_tests! {
@@ -8,7 +9,7 @@ declare_tests! {
         assert_eq!(1 + 1, 2);
     },
     another_test => {
-        assert_eq!(2 + 2, 4);
+        assert_eq!(2 + 2, 44);
     },
 }
 
@@ -49,7 +50,6 @@ fn panic_fmt(info: &core::panic::PanicInfo) -> ! {
 }
 
 pub fn test_runner(tests: &[&[&dyn Testable]]) {
-    println!("Running in test mode. Please check the serial output for test results.");
     serial_println!("Running {} tests", tests.len());
     for module in tests {
         for test in *module {
@@ -64,5 +64,6 @@ pub fn test_runner(tests: &[&[&dyn Testable]]) {
 }
 
 pub fn test_main() {
+    warn!("Running in test mode. Please check the serial output for test results.");
     test_runner(ALL_TESTS);
 }
