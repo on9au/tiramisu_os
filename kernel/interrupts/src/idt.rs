@@ -16,7 +16,7 @@ lazy_static! {
     };
 }
 
-pub fn init_idt() {
+pub(crate) fn init_idt() {
     IDT.load();
     info!("IDT initialized.");
 }

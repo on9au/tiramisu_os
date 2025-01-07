@@ -10,7 +10,6 @@ mod uefi;
 #[cfg(feature = "test")]
 mod test;
 
-use interrupts::idt::init_idt;
 use logging::{fatal, warn};
 use vga_text_mode::{clear_screen, println};
 
@@ -31,9 +30,16 @@ fn main() -> ! {
     clear_screen!();
     println!("Hello World from Tiramisu Bootloader!");
 
-    init_idt();
+    interrupts::init();
 
     x86_64::instructions::interrupts::int3();
+
+    fn stack_overflow() {
+        stack_overflow(); // for each recursion, the return address is pushed
+    }
+
+    // trigger a stack overflow
+    stack_overflow();
 
     warn!("We are hanging here...");
 

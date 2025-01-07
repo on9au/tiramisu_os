@@ -32,6 +32,7 @@ version = "0.1.0"
 dependencies = [
  "lazy_static",
  "logging",
+ "spin",
  "test_system",
  "x86_64",
 ]

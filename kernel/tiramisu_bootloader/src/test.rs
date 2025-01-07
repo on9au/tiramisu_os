@@ -9,13 +9,13 @@ declare_tests! {
         assert_eq!(1 + 1, 2);
     },
     another_test => {
-        assert_eq!(2 + 2, 44);
+        assert_eq!(2 + 2, 4);
     },
 }
 
 /// Declare tests in a given module.
 const ALL_TESTS: &[&[&dyn Testable]] =
-    &[TESTS, vga_text_mode::test::TESTS, uart_16550::test::TESTS];
+    &[TESTS, vga_text_mode::test::TESTS, uart_16550::test::TESTS, interrupts::test::TESTS];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
@@ -64,6 +64,7 @@ pub fn test_runner(tests: &[&[&dyn Testable]]) {
 }
 
 pub fn test_main() {
+    interrupts::init();
     warn!("Running in test mode. Please check the serial output for test results.");
     test_runner(ALL_TESTS);
 }
