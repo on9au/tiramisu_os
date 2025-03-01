@@ -1,4 +1,8 @@
-# NextOS
+# Tiramisu OS
+
+pretty shoddy OS made rust
+
+my first experience with low level rust and asm stuff
 
 bootloader error codes:
 
