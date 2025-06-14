@@ -9,6 +9,11 @@ version = "0.1.0"
 [[package]]
 name = "kernel"
 version = "0.1.0"
+dependencies = [
+ "kcore",
+ "services",
+ "userland",
+]
 
 [[package]]
 name = "services"
